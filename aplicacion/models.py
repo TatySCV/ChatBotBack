@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+from aplicacion.models.Usuario import Usuario
+from aplicacion.models.Mensaje import Mensaje
+from aplicacion.models.Conversacion import Conversacion
+from aplicacion.models.RespuestasPredefinidas import RespuestaPredefinidas

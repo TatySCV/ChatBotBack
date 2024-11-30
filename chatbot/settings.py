@@ -28,11 +28,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Clave secreta para firmar los JWT
+JWT_SECRET = os.getenv('JWT_SECRET', 'super-secret-key')  # Usa una clave fuerte
+JWT_EXP_DELTA_SECONDS = 3600  # El token expirará en 1 hora
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'aplicacion',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,9 +47,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -120,3 +126,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USR_MODEL = 'aplicacion.Usuario'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

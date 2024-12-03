@@ -1,6 +1,8 @@
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+
 
 from aplicacion.models import Conversacion, Mensaje, Usuario
 
@@ -82,18 +84,50 @@ def respuesta_chatbot(request):
             mensaje = data.get("mensaje", "")
             id_conversacion = data.get("id_conversacion", "")
             titulo_conversacion = data.get("titulo_conversacion", "")
-            fecha_creacion = data.get("fecha_creacion", "")
-
+            # fecha_creacion = data.get("fecha_creacion", "")
             
-
             print(data)
-
+            
             respuesta_generada = "Esta es una respuesta generada por el chatbot"
+            
+            try:
+                conversacion = Conversacion.objects.get(pk=id_conversacion)
+            except Conversacion.DoesNotExist:
+                return JsonResponse({"error": "Conversación no encontrada"}, status=404)
+
+            print(conversacion)
+
+            nuevo_mensaje = Mensaje(
+                contenido=mensaje,
+                remitente='usuario',
+                usuario=conversacion.usuario,  # Asociamos el usuario de la conversación
+                timestamp=timezone.now(),
+            )
+            nuevo_mensaje.save()
+            print(f"Mensaje guardado: {nuevo_mensaje}")
+
+            # Agregar el mensaje del usuario a la conversación
+            conversacion.mensajes.add(nuevo_mensaje)
+            conversacion.save()
+            
+            nuevo_mensaje_bot = Mensaje(
+                contenido=respuesta_generada,
+                remitente='bot',
+                usuario=conversacion.usuario,  # Asociamos el usuario de la conversación
+                timestamp=timezone.now(),
+            )
+            nuevo_mensaje_bot.save()
+            print(f"Mensaje del bot guardado: {nuevo_mensaje_bot}")
+
+            # Agregar el mensaje del bot a la conversación
+            conversacion.mensajes.add(nuevo_mensaje_bot)
+            conversacion.save()
 
             # Devolver la respuesta generada al frontend
             return JsonResponse(respuesta_generada, status=200, safe=False)
 
         except Exception as e:
+            print(f"Error: {str(e)}")  # Imprimir el error para depuración
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Método no permitido"}, status=405)

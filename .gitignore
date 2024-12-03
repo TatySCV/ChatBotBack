@@ -1,1 +1,7 @@
 .venv/
+
+.env
+
+dataset.csv
+
+db.sqlite3

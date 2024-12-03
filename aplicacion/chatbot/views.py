@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
+from .Integration import Integration
+
 
 from aplicacion.models import Conversacion, Mensaje, Usuario
 
@@ -88,14 +90,16 @@ def respuesta_chatbot(request):
             
             print(data)
             
-            respuesta_generada = "Esta es una respuesta generada por el chatbot"
             
             try:
                 conversacion = Conversacion.objects.get(pk=id_conversacion)
             except Conversacion.DoesNotExist:
                 return JsonResponse({"error": "Conversación no encontrada"}, status=404)
-
-            print(conversacion)
+            
+            context = conversacion.mensajes.order_by('-timestamp').values('contenido', 'remitente')
+            
+            bot = Integration()
+            respuesta_generada = bot.obtener_respuesta(mensaje, context)
 
             nuevo_mensaje = Mensaje(
                 contenido=mensaje,

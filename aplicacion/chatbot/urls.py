@@ -6,4 +6,5 @@ urlpatterns = [
     path('conversaciones/', views.listar_conversaciones),
     path('mensajes/', views.mensajes),
     path('respuesta-chatbot/', views.respuesta_chatbot),
+    path('crear-conversacion/', views.nueva_conversacion),
 ]

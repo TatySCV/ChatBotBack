@@ -202,3 +202,33 @@ def respuesta_chatbot(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+@csrf_exempt
+def nueva_conversacion(request):
+    user_data = request.GET.get("user")
+    
+    user_dict = json.loads(user_data) if user_data else {}
+
+    user_id = user_dict.get("id")
+    # Obtener el usuario
+    usuario = Usuario.objects.get(id=user_id)
+    
+    # Crear nueva conversación
+    conversacion = Conversacion(
+        usuario=usuario,
+        titulo="Conversación con el bot",
+        fecha_creacion=timezone.now(),
+    )
+    
+    conversacion.save()
+    
+    # Serializar datos
+    conversacion_serializada = {
+        "id": conversacion.id,
+        "usuario": conversacion.usuario.id,
+        "titulo": conversacion.titulo,
+        "fecha_creacion": conversacion.fecha_creacion.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    
+    # Retornar la conversación serializada
+    return JsonResponse(conversacion_serializada, status=200, safe=False)

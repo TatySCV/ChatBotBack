@@ -9,16 +9,20 @@ from .Integration import Integration
 
 from aplicacion.models import Conversacion, Mensaje, Usuario
 
-
+@csrf_exempt
 def listar_conversaciones(request):
     user_data = request.GET.get("user")
 
     user_dict = json.loads(user_data) if user_data else {}
 
     user_id = user_dict.get("id")
+    
+    print(f"ID de usuario recibido: {user_id}")
     # Obtener el usuario
     usuario = Usuario.objects.get(id=user_id)
 
+    print(f"Usuario encontrado: {usuario}")
+    
     # Obtener conversaciones del usuario
     conversaciones = Conversacion.objects.filter(usuario=usuario).prefetch_related(
         "mensajes"
@@ -164,12 +168,13 @@ def respuesta_chatbot(request):
 
                 # Obtener el contexto de mensajes (últimos mensajes en orden inverso)
                 context = conversacion.mensajes.order_by("-timestamp").values(
-                    "contenido", "remitente"
+                    "contenido"
                 )
 
                 # Generar respuesta del bot
                 bot = Integration()
-                respuesta_generada = bot.obtener_respuesta(mensaje, context)
+                respuesta_generada = bot.control(context, mensaje)
+                print(f"Respuesta generada: {respuesta_generada}")
 
                 # Guardar el mensaje del bot
                 mensaje_bot = Mensaje(

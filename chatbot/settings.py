@@ -80,9 +80,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'chatbot.wsgi.application'
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # Esto usa la ruta base del proyecto
+    'default': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'ia-chatbot',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -127,7 +131,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USR_MODEL = 'aplicacion.Usuario'
+AUTH_USER_MODEL = 'aplicacion.Usuario'  # Reemplaza 'aplicacion' con el nombre de tu app
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

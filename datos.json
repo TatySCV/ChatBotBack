@@ -1,0 +1,62 @@
+[
+  {
+    "model": "aplicacion.datosejercicio",
+    "fields": {
+      "age": 30,
+      "gender": "M",
+      "weight": 70.0,
+      "height": 1.75,
+      "max_bpm": 180,
+      "avg_bpm": 140,
+      "resting_bpm": 65,
+      "session_duration": 1.0,
+      "calories_burned": 500.0,
+      "workout_type": "Cardio",
+      "fat_percentage": 20.0,
+      "water_intake": 2.5,
+      "workout_frequency": 4,
+      "experience_level": "Intermedio",
+      "bmi": 22.86
+    }
+  },
+  {
+    "model": "aplicacion.datosejercicio",
+    "fields": {
+      "age": 25,
+      "gender": "F",
+      "weight": 60.0,
+      "height": 1.65,
+      "max_bpm": 195,
+      "avg_bpm": 150,
+      "resting_bpm": 68,
+      "session_duration": 0.75,
+      "calories_burned": 350.0,
+      "workout_type": "Ciclismo",
+      "fat_percentage": 24.0,
+      "water_intake": 2.0,
+      "workout_frequency": 3,
+      "experience_level": "Principiante",
+      "bmi": 22.04
+    }
+  },
+  {
+    "model": "aplicacion.datosejercicio",
+    "fields": {
+      "age": 42,
+      "gender": "M",
+      "weight": 82.0,
+      "height": 1.8,
+      "max_bpm": 178,
+      "avg_bpm": 132,
+      "resting_bpm": 72,
+      "session_duration": 1.25,
+      "calories_burned": 620.0,
+      "workout_type": "Pesas",
+      "fat_percentage": 26.0,
+      "water_intake": 3.0,
+      "workout_frequency": 5,
+      "experience_level": "Avanzado",
+      "bmi": 25.31
+    }
+  }
+]

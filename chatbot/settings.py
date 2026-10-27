@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,6 +34,10 @@ ALLOWED_HOSTS = ['*']
 JWT_SECRET = os.getenv('JWT_SECRET', 'super-secret-key')  # Usa una clave fuerte
 JWT_EXP_DELTA_SECONDS = 3600  # El token expirará en 1 hora
 
+
+from dotenv import load_dotenv
+
+load_dotenv(BASE_DIR / ".env")
 
 # Application definition
 
@@ -77,10 +83,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chatbot.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mysql.connector.django',
+#         'NAME': 'ia-chatbot',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # Esto usa la ruta base del proyecto
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -125,7 +142,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USR_MODEL = 'aplicacion.Usuario'
+AUTH_USER_MODEL = 'aplicacion.Usuario'  # Reemplaza 'aplicacion' con el nombre de tu app
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

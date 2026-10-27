@@ -1,1 +1,12 @@
 .venv/
+
+.env
+
+dataset.csv
+
+db.sqlite3
+
+.env
+db.sqlite3*
+__pycache__/
+*.py[cod]

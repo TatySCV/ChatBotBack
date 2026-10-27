@@ -1,9 +1,7 @@
 import os
 from groq import Groq
-import mysql.connector
-
-# Cliente de la API de Groq
-client = Groq(api_key="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")
+# import mysql.connector
+from django.db import connection
 
 # Configuración de conexión a la base de datos
 db_config = {
@@ -37,11 +35,10 @@ TABLA aplicacion_datosejercicio:
 
 class Integration:
     def __init__(self):
-        # Configura la clave API como una variable de entorno
-        api_key = os.getenv(
-            "GROQ_API_KEY", "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"
-        )
-        # Inicializa el cliente con la clave API
+        
+        api_key = os.getenv("GROQ_API_KEY")
+        if not api_key:
+            raise RuntimeError("Falta configurar GROQ_API_KEY")
         self.client = Groq(api_key=api_key)
 
     def obtener_respuesta(self, mensaje, context):
@@ -53,7 +50,7 @@ class Integration:
         try:
             # Llama al modelo Llama 3.1 8b 8192 para obtener la respuesta
             completion = self.client.chat.completions.create(
-                model="llama3-8b-8192",  # Cambia al modelo correcto
+                model="openai/gpt-oss-20b",  # Cambia al modelo correcto
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=200,
                 temperature=0.7,
@@ -77,7 +74,7 @@ class Integration:
                     "content": prompt,
                 }
             ],
-            model="llama3-8b-8192",
+            model="openai/gpt-oss-20b",
         )
         try:
             # Retorna la respuesta generada por Llama 3
@@ -126,7 +123,7 @@ class Integration:
             print(f"Error al generar la consulta SQL: {e}")
             return ""
 
-    def execute_sql(self, sql):
+    # def execute_sql(self, sql):
         try:
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor(dictionary=True)
@@ -146,6 +143,25 @@ class Integration:
                 cursor.close()
             if "conn" in locals():
                 conn.close()
+
+    def execute_sql(self, sql):
+        try:
+            # Solo permitir consultas de lectura
+            query = sql.strip().rstrip(";")
+            if not query.upper().startswith("SELECT"):
+                print("Consulta rechazada: solo se permiten consultas SELECT.")
+                return []
+
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                columns = [column[0] for column in cursor.description]
+                return [
+                    dict(zip(columns, row))
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            print(f"Error al ejecutar la consulta: {e}")
+            return []
 
     def obtener_respuesta_entendible(self, sql_results, question, context):
         if not sql_results:

@@ -35,6 +35,10 @@ JWT_SECRET = os.getenv('JWT_SECRET', 'super-secret-key')  # Usa una clave fuerte
 JWT_EXP_DELTA_SECONDS = 3600  # El token expirará en 1 hora
 
 
+from dotenv import load_dotenv
+
+load_dotenv(BASE_DIR / ".env")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -79,14 +83,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chatbot.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mysql.connector.django',
+#         'NAME': 'ia-chatbot',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'ia-chatbot',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
